@@ -27,6 +27,16 @@ export class FilmsService {
     return film;
   }
 
+  async getOneDetailed(
+    filmId: number,
+    options?: Omit<FindOneOptions<Film>, 'where'>,
+  ) {
+    return this.getOne(filmId, {
+      ...options,
+      relations: { inventories: true },
+    });
+  }
+
   async create(film: CreateFilmRequest) {
     return this.filmRepository.save(film);
   }

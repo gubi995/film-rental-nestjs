@@ -1,5 +1,5 @@
 import {
-  ConflictException,
+  BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -15,8 +15,8 @@ export class InventoriesService {
     private inventoryRepository: Repository<Inventory>,
   ) {}
 
-  create() {
-    return this.inventoryRepository.save({});
+  create(film: Film) {
+    return this.inventoryRepository.save({ film });
   }
 
   async getOne(inventoryId: number) {
@@ -33,17 +33,21 @@ export class InventoriesService {
     await this.inventoryRepository.remove(inventory);
   }
 
-  addFilmToInventory(film: Film, inventory: Inventory) {
+  createInventoryToFilm(film: Film, inventory: Inventory) {
     inventory.film = film;
 
     return this.inventoryRepository.save(inventory);
   }
 
-  checkIfFilmBelongsToInventory(film: Film, inventory: Inventory) {
-    const isPartOfTheInventory = film.inventories.find(
+  validateIfFilmBelongsToInventory(film: Film, inventory: Inventory) {
+    const isFilmBelongsToTheInventory = film.inventories.find(
       (filmInventory) => filmInventory.inventoryId === inventory.inventoryId,
     );
 
-    return isPartOfTheInventory;
+    if (!isFilmBelongsToTheInventory) {
+      throw new BadRequestException(
+        `Film with id: ${film.filmId} does not belong to the inventory.`,
+      );
+    }
   }
 }

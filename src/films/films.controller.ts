@@ -31,6 +31,11 @@ export class FilmsController {
     return this.filmService.getOne(filmId);
   }
 
+  @Get(':filmId/detailed')
+  getOneDetailed(@Param() { filmId }: GetOneFilmRequest) {
+    return this.filmService.getOneDetailed(filmId);
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   crete(@Body() body: CreateFilmRequest) {
