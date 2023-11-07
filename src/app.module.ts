@@ -4,10 +4,8 @@ import { Film } from './films/films.entity';
 import { FilmsModule } from './films/films.module';
 import { InventoriesModule } from './inventories/inventories.module';
 import { RentalsModule } from './rentals/rentals.module';
-import { PaymentsModule } from './payments/payments.module';
 import { Inventory } from './inventories/inventories.entity';
 import { Rental } from './rentals/rentals.entity';
-import { Payment } from './payments/payments.entity';
 
 @Module({
   imports: [
@@ -20,14 +18,13 @@ import { Payment } from './payments/payments.entity';
       database: 'dvdrental',
       // synchronize: true,
       logging: true,
-      entities: [Film, Inventory, Rental, Payment],
+      entities: [Film, Inventory, Rental],
       subscribers: [],
       migrations: [],
     }),
     FilmsModule,
     InventoriesModule,
     RentalsModule,
-    PaymentsModule,
   ],
 })
 export class AppModule {}

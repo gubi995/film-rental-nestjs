@@ -19,7 +19,7 @@ export class InventoriesService {
     return this.inventoryRepository.save({ film });
   }
 
-  async getOne(inventoryId: number) {
+  async get(inventoryId: number) {
     const inventory = await this.inventoryRepository.findOneBy({ inventoryId });
 
     if (!inventory) {

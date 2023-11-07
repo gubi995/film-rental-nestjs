@@ -1,4 +1,3 @@
-import { Payment } from '../payments/payments.entity';
 import { Inventory } from '../inventories/inventories.entity';
 import {
   Column,
@@ -23,7 +22,4 @@ export class Rental {
   @ManyToOne(() => Inventory, (inventory) => inventory.rental)
   @JoinColumn({ name: 'inventory_id' })
   inventories: Inventory[];
-
-  @OneToMany(() => Payment, (payment) => payment.rentals)
-  payment: Payment[];
 }

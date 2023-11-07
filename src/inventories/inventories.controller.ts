@@ -21,8 +21,8 @@ export class InventoriesController {
   ) {}
 
   @Post()
-  async create(@Param() { filmId }: AddFilmToInventoryRequest) {
-    const film = await this.filmsService.getOne(filmId, {
+  async createInventoryToFilm(@Param() { filmId }: AddFilmToInventoryRequest) {
+    const film = await this.filmsService.get(filmId, {
       relations: { inventories: true },
     });
     const { inventoryId } = await this.inventoriesService.create(film);
@@ -32,14 +32,14 @@ export class InventoriesController {
 
   @Delete(':inventoryId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async removeFilm(
+  async removeInventory(
     @Param() { inventoryId, filmId }: DeleteFilmToInventoryRequest,
   ) {
     const [film, inventory] = await Promise.all([
-      this.filmsService.getOne(filmId, {
+      this.filmsService.get(filmId, {
         relations: { inventories: true },
       }),
-      this.inventoriesService.getOne(inventoryId),
+      this.inventoriesService.get(inventoryId),
     ]);
 
     this.inventoriesService.validateIfFilmBelongsToInventory(film, inventory);

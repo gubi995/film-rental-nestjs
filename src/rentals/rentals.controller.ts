@@ -1,4 +1,6 @@
 import { Controller } from '@nestjs/common';
 
-@Controller('rentals')
-export class RentalsController {}
+@Controller('films/:filmId/inventories/:inventoryId/rentals')
+export class RentalsController {
+  constructor() {}
+}

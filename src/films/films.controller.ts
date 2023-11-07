@@ -22,30 +22,30 @@ export class FilmsController {
   constructor(private readonly filmService: FilmsService) {}
 
   @Get()
-  get(@Query() query: GetFilmRequest) {
-    return this.filmService.get(query);
+  listFilms(@Query() query: GetFilmRequest) {
+    return this.filmService.list(query);
   }
 
   @Get(':filmId')
-  getOne(@Param() { filmId }: GetOneFilmRequest) {
-    return this.filmService.getOne(filmId);
+  getFilm(@Param() { filmId }: GetOneFilmRequest) {
+    return this.filmService.get(filmId);
   }
 
   @Get(':filmId/detailed')
-  getOneDetailed(@Param() { filmId }: GetOneFilmRequest) {
-    return this.filmService.getOneDetailed(filmId);
+  getDetailedFilm(@Param() { filmId }: GetOneFilmRequest) {
+    return this.filmService.getDetailed(filmId);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  crete(@Body() body: CreateFilmRequest) {
-    return this.filmService.create(body);
+  addFilm(@Body() body: CreateFilmRequest) {
+    return this.filmService.add(body);
   }
 
   @Delete(':filmId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param() { filmId }: DeleteFilmRequest) {
-    const film = await this.filmService.getOne(filmId);
+  async removeFilm(@Param() { filmId }: DeleteFilmRequest) {
+    const film = await this.filmService.get(filmId);
 
     return this.filmService.remove(film);
   }

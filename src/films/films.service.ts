@@ -10,11 +10,11 @@ export class FilmsService {
     @InjectRepository(Film) private filmRepository: Repository<Film>,
   ) {}
 
-  async get(findOptions: GetFilmRequest) {
+  async list(findOptions: GetFilmRequest) {
     return this.filmRepository.findBy(findOptions);
   }
 
-  async getOne(filmId: number, options?: Omit<FindOneOptions<Film>, 'where'>) {
+  async get(filmId: number, options?: Omit<FindOneOptions<Film>, 'where'>) {
     const film = await this.filmRepository.findOne({
       ...options,
       where: { filmId },
@@ -27,17 +27,17 @@ export class FilmsService {
     return film;
   }
 
-  async getOneDetailed(
+  async getDetailed(
     filmId: number,
     options?: Omit<FindOneOptions<Film>, 'where'>,
   ) {
-    return this.getOne(filmId, {
+    return this.get(filmId, {
       ...options,
       relations: { inventories: true },
     });
   }
 
-  async create(film: CreateFilmRequest) {
+  async add(film: CreateFilmRequest) {
     return this.filmRepository.save(film);
   }
 
