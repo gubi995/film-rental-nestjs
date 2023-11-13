@@ -22,9 +22,12 @@ export class InventoriesController {
 
   @Post()
   async createInventoryToFilm(@Param() { filmId }: AddFilmToInventoryRequest) {
-    const film = await this.filmsService.get(filmId, {
-      relations: { inventories: true },
-    });
+    const film = await this.filmsService.get(
+      { filmId },
+      {
+        relations: { inventories: true },
+      },
+    );
     const { inventoryId } = await this.inventoriesService.create(film);
 
     return { inventoryId };
@@ -36,9 +39,12 @@ export class InventoriesController {
     @Param() { inventoryId, filmId }: DeleteFilmToInventoryRequest,
   ) {
     const [film, inventory] = await Promise.all([
-      this.filmsService.get(filmId, {
-        relations: { inventories: true },
-      }),
+      this.filmsService.get(
+        { filmId },
+        {
+          relations: { inventories: true },
+        },
+      ),
       this.inventoriesService.get(inventoryId),
     ]);
 

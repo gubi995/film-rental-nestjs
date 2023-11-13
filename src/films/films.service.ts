@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { Film } from './films.entity';
 import { CreateFilmRequest, GetFilmRequest } from './films.dto';
 
@@ -14,14 +14,19 @@ export class FilmsService {
     return this.filmRepository.findBy(findOptions);
   }
 
-  async get(filmId: number, options?: Omit<FindOneOptions<Film>, 'where'>) {
+  async get(
+    whereClause: FindOptionsWhere<Film>,
+    options?: Omit<FindOneOptions<Film>, 'where'>,
+  ) {
     const film = await this.filmRepository.findOne({
       ...options,
-      where: { filmId },
+      where: whereClause,
     });
 
     if (!film) {
-      throw new NotFoundException(`Film not found by id: ${filmId}.`);
+      throw new NotFoundException(
+        `Film not found by: ${JSON.stringify(whereClause)}.`,
+      );
     }
 
     return film;
@@ -31,10 +36,13 @@ export class FilmsService {
     filmId: number,
     options?: Omit<FindOneOptions<Film>, 'where'>,
   ) {
-    return this.get(filmId, {
-      ...options,
-      relations: { inventories: true },
-    });
+    return this.get(
+      { filmId },
+      {
+        ...options,
+        relations: { inventories: { rentals: true } },
+      },
+    );
   }
 
   async add(film: CreateFilmRequest) {

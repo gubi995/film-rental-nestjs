@@ -9,5 +9,6 @@ import { FilmsModule } from '../films/films.module';
   imports: [TypeOrmModule.forFeature([Inventory]), FilmsModule],
   controllers: [InventoriesController],
   providers: [InventoriesService],
+  exports: [InventoriesService],
 })
 export class InventoriesModule {}

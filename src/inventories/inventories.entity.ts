@@ -1,5 +1,5 @@
-import { Rental } from '../rentals/rentals.entity';
-import { Film } from '../films/films.entity';
+import type { Rental } from '../rentals/rentals.entity';
+import type { Film } from '../films/films.entity';
 import {
   Entity,
   JoinColumn,
@@ -13,10 +13,10 @@ export class Inventory {
   @PrimaryGeneratedColumn({ name: 'inventory_id' })
   inventoryId: number;
 
-  @ManyToOne(() => Film, (film) => film.inventories)
+  @ManyToOne('Film', 'inventories')
   @JoinColumn({ name: 'film_id' })
   film: Film | null;
 
-  @OneToMany(() => Rental, (rental) => rental.inventories)
-  rental: Rental;
+  @OneToMany('Rental', 'inventory')
+  rentals: Rental[];
 }

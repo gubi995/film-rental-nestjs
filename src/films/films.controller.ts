@@ -28,7 +28,7 @@ export class FilmsController {
 
   @Get(':filmId')
   getFilm(@Param() { filmId }: GetOneFilmRequest) {
-    return this.filmService.get(filmId);
+    return this.filmService.get({ filmId });
   }
 
   @Get(':filmId/detailed')
@@ -45,7 +45,7 @@ export class FilmsController {
   @Delete(':filmId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async removeFilm(@Param() { filmId }: DeleteFilmRequest) {
-    const film = await this.filmService.get(filmId);
+    const film = await this.filmService.get({ filmId });
 
     return this.filmService.remove(film);
   }

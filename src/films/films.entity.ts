@@ -1,4 +1,4 @@
-import { Inventory } from '../inventories/inventories.entity';
+import type { Inventory } from '../inventories/inventories.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -18,6 +18,6 @@ export class Film {
   @Column({ name: 'rental_rate' })
   rentalRate?: number;
 
-  @OneToMany(() => Inventory, (inventory) => inventory.film)
+  @OneToMany('Inventory', 'film')
   inventories: Inventory[];
 }

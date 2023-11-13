@@ -1,10 +1,9 @@
-import { Inventory } from '../inventories/inventories.entity';
+import type { Inventory } from '../inventories/inventories.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -16,10 +15,13 @@ export class Rental {
   @Column({ name: 'rental_date' })
   rentalDate: Date;
 
-  @Column({ name: 'return_date' })
-  returnDate: Date;
+  @Column({
+    name: 'return_date',
+    type: 'timestamp without time zone',
+  })
+  returnDate: Date | null;
 
-  @ManyToOne(() => Inventory, (inventory) => inventory.rental)
+  @ManyToOne('Inventory', 'rentals')
   @JoinColumn({ name: 'inventory_id' })
-  inventories: Inventory[];
+  inventory: Inventory;
 }
