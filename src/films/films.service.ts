@@ -10,7 +10,7 @@ export class FilmsService {
     @InjectRepository(Film) private filmRepository: Repository<Film>,
   ) {}
 
-  async list(findOptions: GetFilmRequest) {
+  async list(findOptions = {} as GetFilmRequest) {
     return this.filmRepository.findBy(findOptions);
   }
 
