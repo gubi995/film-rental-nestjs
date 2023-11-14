@@ -1,19 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { NotFoundException } from '@nestjs/common';
 import { FilmsService } from './films.service';
 import { Film } from './films.entity';
-import { NotFoundException } from '@nestjs/common';
+import { FILMS } from '../mocks/film';
 
-const FILMS: Film[] = [
-  {
-    filmId: 1,
-    title: 'Film 1 title',
-    description: 'Film 1 description',
-    releaseYear: 2000,
-    inventories: [],
-    rentalRate: 10,
-  },
-];
+const [FILM] = FILMS;
 
 describe('FilmsService', () => {
   let filmService: FilmsService;
@@ -45,21 +37,21 @@ describe('FilmsService', () => {
       // Then - What is the expectation
       it('should return it back', async () => {
         // Arrange - Setup all prerequisites that is needed to run our code under test
-        filmRepository.findOne.mockImplementation(() => FILMS[0]);
+        filmRepository.findOne.mockImplementation(() => FILM);
 
         // Act - Trigger the code under test. (E.g. call a function on a service).
-        const film = await filmService.get({ filmId: FILMS[0].filmId });
+        const film = await filmService.get({ filmId: FILM.filmId });
 
         // Assert - Check if we receive the expected result
-        expect(film).toBe(FILMS[0]);
+        expect(film).toBe(FILM);
       });
     });
 
-    describe('when a film is NOT found in the repository', () => {
+    describe('when a film does NOT found in the repository', () => {
       it('should throw a NotFoundException', async () => {
         filmRepository.findOne.mockImplementation(() => null);
 
-        const getFilm = filmService.get({ filmId: FILMS[0].filmId });
+        const getFilm = filmService.get({ filmId: FILM.filmId });
 
         expect(getFilm).rejects.toThrowError(NotFoundException);
       });
@@ -69,11 +61,11 @@ describe('FilmsService', () => {
   describe('getDetailed', () => {
     describe('when a film is found in the repository', () => {
       it('should return it back', async () => {
-        filmRepository.findOne.mockImplementation(() => FILMS[0]);
+        filmRepository.findOne.mockImplementation(() => FILM);
 
-        const film = await filmService.getDetailed(FILMS[0].filmId);
+        const film = await filmService.getDetailed(FILM.filmId);
 
-        expect(film).toBe(FILMS[0]);
+        expect(film).toBe(FILM);
       });
     });
 
@@ -81,7 +73,7 @@ describe('FilmsService', () => {
       it('should throw a NotFoundException', async () => {
         filmRepository.findOne.mockImplementation(() => null);
 
-        const getFilm = filmService.getDetailed(FILMS[0].filmId);
+        const getFilm = filmService.getDetailed(FILM.filmId);
 
         expect(getFilm).rejects.toThrowError(NotFoundException);
       });
@@ -100,8 +92,7 @@ describe('FilmsService', () => {
 
   describe('add', () => {
     it('should call the film repository with the correct arguments and return the film', async () => {
-      const [film] = FILMS;
-      const { title, description, releaseYear } = film;
+      const { title, description, releaseYear } = FILM;
       const filmToAdd = {
         title,
         description,
@@ -111,7 +102,7 @@ describe('FilmsService', () => {
 
       const newFilm = await filmService.add(filmToAdd);
 
-      expect(newFilm).toBe(film);
+      expect(newFilm).toBe(FILM);
       expect(filmRepository.save).toHaveBeenCalledWith(filmToAdd);
     });
   });

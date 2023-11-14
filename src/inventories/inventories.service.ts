@@ -33,12 +33,6 @@ export class InventoriesService {
     await this.inventoryRepository.remove(inventory);
   }
 
-  createInventoryToFilm(film: Film, inventory: Inventory) {
-    inventory.film = film;
-
-    return this.inventoryRepository.save(inventory);
-  }
-
   validateIfFilmBelongsToInventory(film: Film, inventory: Inventory) {
     const isFilmBelongsToTheInventory = film.inventories.find(
       (filmInventory) => filmInventory.inventoryId === inventory.inventoryId,
