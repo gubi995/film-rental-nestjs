@@ -28,13 +28,11 @@ export class RentalsService {
   }
 
   rentFilm(inventory: Inventory) {
-    const newRental = this.rentalRepository.create({
+    return this.rentalRepository.save({
       rentalDate: new Date(),
       returnDate: null,
       inventory,
     });
-
-    return this.rentalRepository.save(newRental);
   }
 
   async returnFilm(rentalId: number) {
