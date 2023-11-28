@@ -5,5 +5,7 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s?$": ["@swc/jest"]
-  }
+  },
+  "globalSetup": "./globalSetup.ts",
+  "globalTeardown": "./globalTeardown.ts"
 }

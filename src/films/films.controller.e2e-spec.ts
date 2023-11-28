@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpStatus, INestApplication } from '@nestjs/common';
+import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import {
   FastifyAdapter,
@@ -29,7 +29,7 @@ const filmsToCreate: Omit<Film, 'filmId'>[] = [
 const createdFilms: Film[] = [];
 
 describe('FilmsController', () => {
-  let app: INestApplication;
+  let app: NestFastifyApplication;
   let filmRepository: Repository<Film>;
 
   const prepareMockData = async () => {
@@ -50,6 +50,7 @@ describe('FilmsController', () => {
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
       new FastifyAdapter(),
     );
+    app.useGlobalPipes(new ValidationPipe());
 
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
@@ -63,26 +64,24 @@ describe('FilmsController', () => {
     it('should return the requested film', async () => {
       const [{ inventories, ...film }] = createdFilms;
 
-      const response = await fetch(
-        `http://localhost:3000/films/${film.filmId}`,
-      );
-      const data = await response.json();
+      const response = await app.inject({
+        path: `films/${film.filmId}`,
+      });
 
-      expect(data).toEqual(film);
+      expect(response.json()).toEqual(film);
     });
 
     it('should response with 404 if the film does not exists', async () => {
       const notExistingFilmId = 0;
 
-      const response = await fetch(
-        `http://localhost:3000/films/${notExistingFilmId}`,
-      );
-      const data = await response.json();
+      const response = await app.inject({
+        path: `films/${notExistingFilmId}`,
+      });
 
-      expect(response.status).toBe(HttpStatus.NOT_FOUND);
-      expect(data).toEqual({
+      expect(response.statusCode).toBe(HttpStatus.NOT_FOUND);
+      expect(response.json()).toEqual({
         error: 'Not Found',
-        message: `Film not found by: {"filmId":${notExistingFilmId}}.`,
+        message: `Film not found by: {"filmId":\"${notExistingFilmId}\"}.`,
         statusCode: HttpStatus.NOT_FOUND,
       });
     });
@@ -90,13 +89,12 @@ describe('FilmsController', () => {
     it('should response with 400 if the film id is invalid', async () => {
       const invalidFilmId = 'text';
 
-      const response = await fetch(
-        `http://localhost:3000/films/${invalidFilmId}`,
-      );
-      const data = await response.json();
+      const response = await app.inject({
+        path: `films/${invalidFilmId}`,
+      });
 
-      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(data).toEqual({
+      expect(response.statusCode).toBe(HttpStatus.BAD_REQUEST);
+      expect(response.json()).toEqual({
         error: 'Bad Request',
         message: [
           'filmId must be a number conforming to the specified constraints',

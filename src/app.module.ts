@@ -11,11 +11,12 @@ import { Rental } from './rentals/rentals.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'admin',
-      database: 'dvdrental',
+      host: '127.0.0.1',
+      // port: 5433,
+      port: 5434,
+      username: 'myuser',
+      password: 'myuserpassword',
+      database: 'filmrental',
       synchronize: true,
       dropSchema: process.env.NODE_ENV === 'test',
       logging: process.env.NODE_ENV === 'test' ? ['warn', 'error'] : true,

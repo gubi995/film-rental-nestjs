@@ -15,7 +15,7 @@ export class Film {
   @Column({ name: 'release_year' })
   releaseYear: number;
 
-  @Column({ name: 'rental_rate' })
+  @Column({ name: 'rental_rate', nullable: true })
   rentalRate?: number;
 
   @OneToMany('Inventory', 'film')
